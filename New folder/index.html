@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Debugger</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            display: none;
+        }
+        .intro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: 18px;
+            color: #bbb;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        textarea {
+            width: 100%;
+            height: 250px; /* Expanded height */
+            background: #2e2e2e;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        button {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #00d4aa;
+        }
+        pre {
+            width: 100%;
+            background: #2e2e2e;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            white-space: pre-wrap;
+            font-size: 16px;
+            text-align: left;
+            min-height: 100px;
+        }
+        .watermark {
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+        }
+        .features {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+        }
+        .features li {
+            font-size: 16px;
+            color: #ddd;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Introduction Page -->
+    <div id="intro" class="intro">
+        <h1>Welcome to AI Code Debugger</h1>
+        <p>An AI-powered tool that detects and fixes errors in Python code instantly.</p>
+        <ul class="features">
+            <li>✅ Detects syntax & logical errors</li>
+            <li>✅ Provides auto-fixed code suggestions</li>
+            <li>✅ Simple & user-friendly interface</li>
+            <li>✅ Works in real-time</li>
+        </ul>
+        <button onclick="startDebugger()">Get Started</button>
+        <div class="watermark">Created by Bdrii</div>
+    </div>
+
+    <!-- Debugger Page (Initially Hidden) -->
+    <div id="debugger" class="container">
+        <h1>AI Code Debugger</h1>
+        <textarea id="codeInput" placeholder="Enter your Python code..."></textarea>
+        <button onclick="debugCode()">Debug Code</button>
+        <pre id="output">Debugging results will appear here...</pre>
+        <div class="watermark">Created by Bdrii</div>
+    </div>
+
+    <script>
+        function startDebugger() {
+            document.getElementById("intro").style.display = "none";
+            document.getElementById("debugger").style.display = "block";
+        }
+
+        function debugCode() {
+            let code = document.getElementById("codeInput").value;
+
+            fetch('/debug', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("output").textContent = 
+                    data.error ? `Error: ${data.error}\n\nFixed Code:\n${data.fixed_code}` : 
+                    `Success: No errors found!\n\nFixed Code:\n${data.fixed_code}`;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
